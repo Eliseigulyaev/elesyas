@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Mini App</title>
+    <!-- Подключаем Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+        }
+        
+        .container {
+            text-align: center;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background-color: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to MiniApp! 👋</h1>
+        <p id="user">Loading user data...</p>
+        <button onclick="handleButtonClick()">Click me!</button>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+        
+        // Показываем главную кнопку
+        tg.expand();
+        tg.MainButton.setText('Submit');
+        tg.MainButton.show();
+        
+        // Получаем данные пользователя
+        const initData = tg.initDataUnsafe;
+        document.getElementById('user').innerHTML = `
+            Hello, ${initData.user?.first_name || 'Anonymous'}!<br>
+            ID: ${initData.user?.id || 'Unknown'}
+        `;
+
+        // Обработчик клика по кнопке
+        function handleButtonClick() {
+            document.getElementById('response').innerHTML = "🎉 Button clicked!";
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        // Обработчик главной кнопки
+        tg.MainButton.onClick(() => {
+            tg.sendData(JSON.stringify({
+                action: 'submit',
+                time: new Date().toISOString()
+            }));
+            tg.close();
+        });
+    </script>
+</body>
+</html>
