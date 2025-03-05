@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Mini App</title>
-    <!-- Подключаем Telegram Web App SDK -->
+    <title>ELESYA AI - решение по автоматизации конетнта в телеграм канале</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
@@ -13,60 +12,74 @@
             font-family: Arial, sans-serif;
             background-color: var(--tg-theme-bg-color);
             color: var(--tg-theme-text-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .container {
             text-align: center;
+            width: 100%;
         }
         
-        button {
-            padding: 12px 24px;
-            background-color: var(--tg-theme-button-color);
-            color: var(--tg-theme-button-text-color);
+        .order-button {
+            padding: 20px 40px;
+            background-color: #8A2BE2;
+            color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 15px;
             cursor: pointer;
-            margin: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 30px auto;
+            display: block;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        
+        .order-button:hover {
+            transform: scale(1.05);
+            background-color: #9932CC;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to MiniApp! 👋</h1>
-        <p id="user">Loading user data...</p>
-        <button onclick="handleButtonClick()">Click me!</button>
+        <h1>Добро пожаловать в сервис разработки! 🚀</h1>
+        <p id="user">Ваш ID: загрузка...</p>
+        
+        <button class="order-button" onclick="openTelegram()">
+            ЗАКАЗАТЬ РАЗРАБОТКУ
+        </button>
+
         <div id="response"></div>
     </div>
 
     <script>
-        // Инициализация Telegram Web App
         const tg = window.Telegram.WebApp;
-        
-        // Показываем главную кнопку
         tg.expand();
-        tg.MainButton.setText('Submit');
-        tg.MainButton.show();
         
-        // Получаем данные пользователя
+        // Инициализация данных пользователя
         const initData = tg.initDataUnsafe;
         document.getElementById('user').innerHTML = `
-            Hello, ${initData.user?.first_name || 'Anonymous'}!<br>
-            ID: ${initData.user?.id || 'Unknown'}
+            Привет, ${initData.user?.first_name || 'гость'}!<br>
+            Ваш ID: ${initData.user?.id || 'не определен'}
         `;
 
-        // Обработчик клика по кнопке
-        function handleButtonClick() {
-            document.getElementById('response').innerHTML = "🎉 Button clicked!";
-            tg.HapticFeedback.impactOccurred('light');
+        // Функция открытия Telegram
+        function openTelegram() {
+            tg.HapticFeedback.impactOccurred('heavy');
+            tg.openLink('https://t.me/alexsti', {try_instant_view: true});
         }
 
-        // Обработчик главной кнопки
+        // Обработчик главной кнопки (опционально)
+        tg.MainButton.setText('Меню');
+        tg.MainButton.show();
         tg.MainButton.onClick(() => {
-            tg.sendData(JSON.stringify({
-                action: 'submit',
-                time: new Date().toISOString()
-            }));
-            tg.close();
+            tg.showAlert('Используйте кнопку заказа выше ⬆️');
         });
     </script>
 </body>
